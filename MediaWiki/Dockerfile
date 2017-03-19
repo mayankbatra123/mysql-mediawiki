@@ -1,7 +1,6 @@
 FROM centos:centos7
 MAINTAINER mayankbatra123@gmail.com
 ENV container=docker
-VOLUME ["/sys/fs/cgroup"]
 
 RUN yum clean all
 RUN yum -y install epel-release
@@ -20,7 +19,7 @@ RUN ansible-playbook -c local /opt/mediawiki.yml
 COPY configure.sh /opt
 RUN /opt/configure.sh
 
-ENTRYPOINT ["/usr/sbin/httpd","-D","FOREGROUND"]
+#ENTRYPOINT ["/usr/sbin/httpd","-D","FOREGROUND"]
 
 EXPOSE 22
 EXPOSE 80
