@@ -1,0 +1,20 @@
+
+ - name: Install packages
+   yum: pkg={{item}} state=installed
+   with_items:
+     - httpd
+     - php
+     - php-mysql
+     - php-gd
+     - git
+     - mariadb-server
+     - php-xml
+     - mariadb
+     - mediawiki*
+
+ - name: Replace ServerName
+   lineinfile: dest=/etc/httpd/conf/httpd.conf regexp='^' line="ServerName localhost:80" state=present
+ 
+ - name: Enable and start httpd service
+   command: /usr/sbin/httpd -k start
+

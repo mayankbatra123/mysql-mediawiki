@@ -1,0 +1,11 @@
+
+ - name: Install packages
+   yum: pkg={{item}} state=installed
+   with_items:
+     - httpd
+     - php
+     - php-mysql
+     - php-gd
+     - mariadb-server
+     - php-xml
+     - mariadb

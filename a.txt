@@ -1,0 +1,156 @@
+Sending build context to Docker daemon 6.896 MB
+Step 1/20 : FROM centos:centos7
+ ---> 98d35105a391
+Step 2/20 : MAINTAINER mayankbatra123@gmail.com
+ ---> Using cache
+ ---> 1546260191ca
+Step 3/20 : RUN yum clean all
+ ---> Using cache
+ ---> 819c3221bff6
+Step 4/20 : RUN yum -y install epel-release
+ ---> Using cache
+ ---> 560f2bdac03b
+Step 5/20 : RUN yum -y install PyYAML python-jinja2 python-httplib2
+ ---> Using cache
+ ---> 70dd343bd9ab
+Step 6/20 : RUN yum -y install python-keyczar python-paramiko
+ ---> Using cache
+ ---> c3c2e3a75d8c
+Step 7/20 : RUN yum -y install python-setuptools git python-pip
+ ---> Using cache
+ ---> b6d60ef00322
+Step 8/20 : RUN yum -y install ansible
+ ---> Using cache
+ ---> 42a98c757589
+Step 9/20 : RUN yum -y install initscripts
+ ---> Using cache
+ ---> 907a2815d519
+Step 10/20 : COPY install_mysql.yml /opt/
+ ---> Using cache
+ ---> e92be09bb8b5
+Step 11/20 : COPY roles /opt/roles
+ ---> Using cache
+ ---> 2dde5546524e
+Step 12/20 : RUN ansible-playbook -c local /opt/install_mysql.yml
+ ---> Using cache
+ ---> 36eeb1a6b11f
+Step 13/20 : COPY permissions.sh /opt/
+ ---> Using cache
+ ---> 0d40a0cc7c19
+Step 14/20 : RUN /opt/permissions.sh /var/lib/mysql/
+ ---> Using cache
+ ---> 4e4dcb53e5f0
+Step 15/20 : RUN /opt/permissions.sh /var/log/mariadb
+ ---> Using cache
+ ---> 41ddea9ccc2a
+Step 16/20 : RUN /opt/permissions.sh /var/run
+ ---> Using cache
+ ---> 2212f390197e
+Step 17/20 : ADD configure.sh /opt
+ ---> da4d35bbd45c
+Removing intermediate container d1a3f5c323e2
+Step 18/20 : RUN /opt/configure.sh
+ ---> Running in 3ff0d510f19c
+[91m#!/bin/bash -xv
+
+cd /usr/bin
++ cd /usr/bin
+mysql_install_db --datadir="/var/lib/mysql" --user=mysql 
++ mysql_install_db --datadir=/var/lib/mysql --user=mysql
+[0mInstalling MariaDB/MySQL system tables in '/var/lib/mysql' ...
+[91m170319  3:58:20 [Note] /usr/libexec/mysqld (mysqld 5.5.52-MariaDB) starting as process 37 ...
+[0mOK
+Filling help tables...
+[91m170319  3:58:20 [Note] /usr/libexec/mysqld (mysqld 5.5.52-MariaDB) starting as process 46 ...
+[0mOK
+
+To start mysqld at boot time you have to copy
+support-files/mysql.server to the right place for your system
+
+PLEASE REMEMBER TO SET A PASSWORD FOR THE MariaDB root USER !
+To do so, start the server, then issue the following commands:
+
+'/usr/bin/mysqladmin' -u root password 'new-password'
+'/usr/bin/mysqladmin' -u root -h 2cd7b0a690e2 password 'new-password'
+
+Alternatively you can run:
+'/usr/bin/mysql_secure_installation'
+
+which will also give you the option of removing the test
+databases and anonymous user created by default.  This is
+strongly recommended for production servers.
+
+See the MariaDB Knowledgebase at http://mariadb.com/kb or the
+MySQL manual for more instructions.
+
+You can start the MariaDB daemon with:
+cd '/usr' ; /usr/bin/mysqld_safe --datadir='/var/lib/mysql'
+
+You can test the MariaDB daemon with mysql-test-run.pl
+cd '/usr/mysql-test' ; perl mysql-test-run.pl
+
+Please report any problems at http://mariadb.org/jira
+
+The latest information about MariaDB is available at http://mariadb.org/.
+You can find additional information about the MySQL part at:
+http://dev.mysql.com
+Support MariaDB development by buying support/new features from MariaDB
+Corporation Ab. You can contact us about this at sales@mariadb.com.
+Alternatively consider joining our community based development effort:
+http://mariadb.com/kb/en/contributing-to-the-mariadb-project/
+
+[91m
+mysqld_safe --datadir="/var/lib/mysql" --socket="/var/lib/mysql/mysql.sock" --user=mysql  &
+
+sleep 15
++ sleep 15
++ mysqld_safe --datadir=/var/lib/mysql --socket=/var/lib/mysql/mysql.sock --user=mysql
+[0m170319 03:58:20 mysqld_safe Logging to '/var/log/mariadb/mariadb.log'.
+170319 03:58:20 mysqld_safe Starting mysqld daemon with databases from /var/lib/mysql
+[91m
+mysqladmin -u root password root
++ mysqladmin -u root password root
+[0m[91m 
+cat /var/log/mariadb/mariadb.log
++ cat /var/log/mariadb/mariadb.log
+[0m170319 03:58:20 mysqld_safe Starting mysqld daemon with databases from /var/lib/mysql
+170319  3:58:20 [Note] /usr/libexec/mysqld (mysqld 5.5.52-MariaDB) starting as process 217 ...
+170319  3:58:20 InnoDB: The InnoDB memory heap is disabled
+170319  3:58:20 InnoDB: Mutexes and rw_locks use GCC atomic builtins
+170319  3:58:20 InnoDB: Compressed tables use zlib 1.2.7
+170319  3:58:20 InnoDB: Using Linux native AIO
+170319  3:58:20 InnoDB: Initializing buffer pool, size = 128.0M
+170319  3:58:20 InnoDB: Completed initialization of buffer pool
+InnoDB: The first specified data file ./ibdata1 did not exist:
+InnoDB: a new database to be created!
+170319  3:58:20  InnoDB: Setting file ./ibdata1 size to 10 MB
+InnoDB: Database physically writes the file full: wait...
+170319  3:58:20  InnoDB: Log file ./ib_logfile0 did not exist: new to be created
+InnoDB: Setting log file ./ib_logfile0 size to 5 MB
+InnoDB: Database physically writes the file full: wait...
+170319  3:58:20  InnoDB: Log file ./ib_logfile1 did not exist: new to be created
+InnoDB: Setting log file ./ib_logfile1 size to 5 MB
+InnoDB: Database physically writes the file full: wait...
+InnoDB: Doublewrite buffer not found: creating new
+InnoDB: Doublewrite buffer created
+InnoDB: 127 rollback segment(s) active.
+InnoDB: Creating foreign key constraint system tables
+InnoDB: Foreign key constraint system tables created
+170319  3:58:20  InnoDB: Waiting for the background threads to start
+170319  3:58:21 Percona XtraDB (http://www.percona.com) 5.5.49-MariaDB-38.0 started; log sequence number 0
+170319  3:58:21 [Note] Plugin 'FEEDBACK' is disabled.
+170319  3:58:21 [Note] Server socket created on IP: '0.0.0.0'.
+170319  3:58:21 [Note] Event Scheduler: Loaded 0 events
+170319  3:58:21 [Note] /usr/libexec/mysqld: ready for connections.
+Version: '5.5.52-MariaDB'  socket: '/var/lib/mysql/mysql.sock'  port: 3306  MariaDB Server
+ ---> 6496d9b53d4a
+Removing intermediate container 3ff0d510f19c
+Step 19/20 : EXPOSE 22
+ ---> Running in 46120894b77d
+ ---> b96d19d695d6
+Removing intermediate container 46120894b77d
+Step 20/20 : EXPOSE 3306
+ ---> Running in 96046f82fa81
+ ---> 7608afa8132e
+Removing intermediate container 96046f82fa81
+Successfully built 7608afa8132e
