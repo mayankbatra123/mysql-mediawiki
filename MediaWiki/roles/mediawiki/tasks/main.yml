@@ -7,10 +7,15 @@
      - php-mysql
      - php-gd
      - git
+     - haproxy
+     - openssl-delevel
      - mariadb-server
      - php-xml
      - mariadb
      - mediawiki*
 
- 
+ - name: Create Directory For HaProxy
+   file: path=/run/haproxy state=directory
+   file: path=/var/lib/haproxy state=directory
+   file: path=/var/lib/haproxy/stats state=file 
 
