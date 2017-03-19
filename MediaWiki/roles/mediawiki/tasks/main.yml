@@ -12,7 +12,5 @@
      - mariadb
      - mediawiki*
 
- - name: Replace ServerName
-   lineinfile: dest=/etc/httpd/conf/httpd.conf regexp='^' line="ServerName localhost:80" state=present
  
 

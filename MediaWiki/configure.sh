@@ -1,5 +1,5 @@
 #!/bin/bash
-
+echo ServerName localhost:80 >>/etc/httpd/conf/httpd.conf
 
 #mkdir -p /var/www/mediawiki
 
