@@ -9,4 +9,8 @@ sleep 15
 
 mysqladmin -u root password root
  
-cat /var/log/mariadb/mariadb.log
+#cat /var/log/mariadb/mariadb.log
+
+mysql -uroot -proot "GRANT ALL ON *.* TO root@'%' IDENTIFIED by '' with GRANT OPTION"
+
+mysql -u root -proot < /opt/create.sql

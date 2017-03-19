@@ -1,0 +1,135 @@
+Sending build context to Docker daemon 6.987 MB
+Step 1/21 : FROM centos:centos7
+ ---> 98d35105a391
+Step 2/21 : MAINTAINER mayankbatra123@gmail.com
+ ---> Using cache
+ ---> 1546260191ca
+Step 3/21 : RUN yum clean all
+ ---> Using cache
+ ---> 819c3221bff6
+Step 4/21 : RUN yum -y install epel-release
+ ---> Using cache
+ ---> 560f2bdac03b
+Step 5/21 : RUN yum -y install PyYAML python-jinja2 python-httplib2
+ ---> Using cache
+ ---> 70dd343bd9ab
+Step 6/21 : RUN yum -y install python-keyczar python-paramiko
+ ---> Using cache
+ ---> c3c2e3a75d8c
+Step 7/21 : RUN yum -y install python-setuptools git python-pip
+ ---> Using cache
+ ---> b6d60ef00322
+Step 8/21 : RUN yum -y install ansible
+ ---> Using cache
+ ---> 42a98c757589
+Step 9/21 : RUN yum -y install initscripts
+ ---> Using cache
+ ---> 907a2815d519
+Step 10/21 : COPY install_mysql.yml /opt/
+ ---> Using cache
+ ---> e92be09bb8b5
+Step 11/21 : COPY roles /opt/roles
+ ---> Using cache
+ ---> 2dde5546524e
+Step 12/21 : COPY sql/create.sql /opt/
+ ---> Using cache
+ ---> cdeb834f9ca8
+Step 13/21 : RUN ansible-playbook -c local /opt/install_mysql.yml
+ ---> Using cache
+ ---> 8e2f7fc4d55c
+Step 14/21 : COPY permissions.sh /opt/
+ ---> Using cache
+ ---> 9a4e29d20a34
+Step 15/21 : RUN /opt/permissions.sh /var/lib/mysql/
+ ---> Using cache
+ ---> 569343b74448
+Step 16/21 : RUN /opt/permissions.sh /var/log/mariadb
+ ---> Using cache
+ ---> d523edd5447f
+Step 17/21 : RUN /opt/permissions.sh /var/run
+ ---> Using cache
+ ---> 65bcc984ee7a
+Step 18/21 : ADD configure.sh /opt
+ ---> 91cf9872e8bc
+Removing intermediate container 27e9b8ef7fdf
+Step 19/21 : RUN /opt/configure.sh
+ ---> Running in 728723c2489f
+[91m#!/bin/bash -xv
+
+cd /usr/bin
++ cd /usr/bin
+mysql_install_db --datadir="/var/lib/mysql" --user=mysql 
++ mysql_install_db --datadir=/var/lib/mysql --user=mysql
+[0mInstalling MariaDB/MySQL system tables in '/var/lib/mysql' ...
+[91m170319  5:02:38 [Note] /usr/libexec/mysqld (mysqld 5.5.52-MariaDB) starting as process 37 ...
+[0mOK
+Filling help tables...
+[91m170319  5:02:38 [Note] /usr/libexec/mysqld (mysqld 5.5.52-MariaDB) starting as process 47 ...
+[0mOK
+
+To start mysqld at boot time you have to copy
+support-files/mysql.server to the right place for your system
+
+PLEASE REMEMBER TO SET A PASSWORD FOR THE MariaDB root USER !
+To do so, start the server, then issue the following commands:
+
+'/usr/bin/mysqladmin' -u root password 'new-password'
+'/usr/bin/mysqladmin' -u root -h 2cd7b0a690e2 password 'new-password'
+
+Alternatively you can run:
+'/usr/bin/mysql_secure_installation'
+
+which will also give you the option of removing the test
+databases and anonymous user created by default.  This is
+strongly recommended for production servers.
+
+See the MariaDB Knowledgebase at http://mariadb.com/kb or the
+MySQL manual for more instructions.
+
+You can start the MariaDB daemon with:
+cd '/usr' ; /usr/bin/mysqld_safe --datadir='/var/lib/mysql'
+
+You can test the MariaDB daemon with mysql-test-run.pl
+cd '/usr/mysql-test' ; perl mysql-test-run.pl
+
+Please report any problems at http://mariadb.org/jira
+
+The latest information about MariaDB is available at http://mariadb.org/.
+You can find additional information about the MySQL part at:
+http://dev.mysql.com
+Support MariaDB development by buying support/new features from MariaDB
+Corporation Ab. You can contact us about this at sales@mariadb.com.
+Alternatively consider joining our community based development effort:
+http://mariadb.com/kb/en/contributing-to-the-mariadb-project/
+
+[91m
+mysqld_safe --datadir="/var/lib/mysql" --socket="/var/lib/mysql/mysql.sock" --user=mysql  &
+
+sleep 15
++ sleep 15
++ mysqld_safe --datadir=/var/lib/mysql --socket=/var/lib/mysql/mysql.sock --user=mysql
+[0m170319 05:02:38 mysqld_safe Logging to '/var/log/mariadb/mariadb.log'.
+170319 05:02:38 mysqld_safe Starting mysqld daemon with databases from /var/lib/mysql
+[91m
+mysqladmin -u root password root
++ mysqladmin -u root password root
+[0m[91m 
+#cat /var/log/mariadb/mariadb.log
+
+mysql -uroot -proot "GRANT ALL ON *.* TO root@'%' IDENTIFIED by '' with GRANT OPTION"
++ mysql -uroot -proot 'GRANT ALL ON *.* TO root@'\''%'\'' IDENTIFIED by '\'''\'' with GRANT OPTION'
+[0m[91mERROR 1049 (42000): Unknown database 'GRANT ALL ON *.* TO root@'%' IDENTIFIED by '' with GRANT OPTION'
+[0m[91m
+mysql -u root -proot < /opt/create.sql
++ mysql -u root -proot
+[0m ---> ce07098854de
+Removing intermediate container 728723c2489f
+Step 20/21 : EXPOSE 22
+ ---> Running in 1dd84e837d23
+ ---> 9765a0cb14d2
+Removing intermediate container 1dd84e837d23
+Step 21/21 : EXPOSE 3306
+ ---> Running in f23ab87df502
+ ---> ac256129040b
+Removing intermediate container f23ab87df502
+Successfully built ac256129040b

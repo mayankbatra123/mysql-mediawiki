@@ -12,6 +12,7 @@ RUN yum -y install initscripts
 
 COPY install_mysql.yml /opt/
 COPY roles /opt/roles
+COPY sql/create.sql /opt/
 
 RUN ansible-playbook -c local /opt/install_mysql.yml
 
@@ -22,6 +23,7 @@ RUN  /opt/permissions.sh /var/run
 
 ADD configure.sh /opt
 RUN /opt/configure.sh
+
 
 EXPOSE 22
 EXPOSE 3306
