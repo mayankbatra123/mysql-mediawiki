@@ -14,8 +14,13 @@
      - mariadb
      - mediawiki*
 
- - name: Create Directory For HaProxy
+ - name: Add Serve Name in Httpd.conf
+   shell: echo "ServerName localhost:80" >> /etc/httpd/conf/httpd.conf
+ 
+ - name: Create Directory For HaProxy and MediaWiki Soft Link
+   file: src=/var/www/mediawiki23 dest=/var/www/html/mediawiki state=link
    file: path=/run/haproxy state=directory
    file: path=/var/lib/haproxy state=directory
-   file: path=/var/lib/haproxy/stats state=file 
+   file: path=/var/lib/haproxy/stats state=touch
+
 

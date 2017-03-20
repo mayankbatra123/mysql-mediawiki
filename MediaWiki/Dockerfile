@@ -13,10 +13,8 @@ COPY roles /opt/roles
 
 RUN ansible-playbook -c local /opt/mediawiki.yml
 
-COPY configure.sh /opt
-RUN /opt/configure.sh
 
-#ENTRYPOINT ["/usr/sbin/httpd","-D","FOREGROUND"]
+ENTRYPOINT ["/usr/sbin/httpd","-D","FOREGROUND"]
 
 EXPOSE 22
 EXPOSE 80
